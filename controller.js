@@ -6,7 +6,7 @@
     canvas.onmousedown = function(e) {
         var x = e.clientX, y = e.clientY;
 
-        mouseBeginX = x;
+        mouseBeginX = x+1;
         mouseBeginY = y;
 
         mousedown = true;
