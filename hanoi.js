@@ -1,20 +1,14 @@
 var NUM_TOWERS = 3,
-    NUM_DOUGHNUT = 5;
+    NUM_DOUGHNUT = 3;
 var doughnut = [];
-var colors = ['red', 'green', 'blue', 'yellow', 'purple'];
+var colors = ['red', 'green', 'blue', 'yellow', 'purple', 'grey', 'orange'];
 
 function init() {
-    for (var i = 0; i < NUM_DOUGHNUT; ++i) {
-        doughnut[i] = new Doughnut(0, NUM_DOUGHNUT - i - 1, i, colors[i]);
+	for (var i = 0; i < NUM_DOUGHNUT; ++i) {
+        doughnut[i] = new Doughnut(1, NUM_DOUGHNUT - i - 1, i + 1, colors[i]);
     }
-
-    integrate();
-}
-
-function integrate() {
-    render();
-
-    setTimeout(integrate, 20);
+	
+	render();
 }
 
 function Doughnut(tower, below, size, color) {
@@ -27,20 +21,19 @@ function Doughnut(tower, below, size, color) {
 }
 
 function smallestDoughnut(tower) {
-    var min = NUM_DOUGHNUT;
-    var minDoghnut = null;
-    var found = false;
+    var min = doughnut[NUM_DOUGHNUT-1].size;
+    var minDoghnut = doughnut[NUM_DOUGHNUT-1];
 
+	if(numDoughnuts(tower) == 0)
+		return null;
+		
     for (var i = 0; i < NUM_DOUGHNUT; ++i) {
-        if (doughnut[i].tower == tower) {
-            found = true;
-            if (doughnut[i].size < min) {
-                min = doughnut[i].size;
-                minDoghnut = doughnut[i];
-            }
-        }
-    }
-
+		if (doughnut[i].tower == tower  &&  doughnut[i].size < min) {
+			min = doughnut[i].size;
+			minDoghnut = doughnut[i];
+		}
+	}
+		
     return minDoghnut;
 }
 
@@ -53,4 +46,24 @@ function numDoughnuts(tower) {
         }
     }
     return c;
+}
+
+function towerX(i) {
+    return MARGIN_HORIZONTAL + TOWER_DISTANCE * i ;
+}
+
+
+function towerHitTest(x, y) {
+    var min = W, min_tower = 1;
+
+    for (var i = 1; i <= NUM_TOWERS; ++i) {
+        var m = Math.abs(towerX(i) - x);
+
+        if (m < min) {
+            min = m;
+            min_tower = i;
+        }
+    }
+
+    return min_tower;
 }
