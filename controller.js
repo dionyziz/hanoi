@@ -1,5 +1,4 @@
 (function controller() {
-    var mousedown = false;
     var activeDoghnut = null;
     var mouseBeginX, mouseBeginY;
 
@@ -9,26 +8,30 @@
         mouseBeginX = x;
         mouseBeginY = y;
 
-        mousedown = true;
-
         var tower = towerHitTest(x, y);
-        var min = NUM_DOUGHNUT;
 
         activeDoghnut = smallestDoughnut(tower);
     };
 
     canvas.onmouseup = function(e) {
         var x = e.clientX, y = e.clientY;
-        mousedown = false;
 
         if (activeDoghnut != null) {
             var oldTower = activeDoghnut.tower;
             var newTower = towerHitTest(x, y);
-
-            activeDoghnut.tower = -1;
-            activeDoghnut.below = numDoughnuts(newTower);
-            activeDoghnut.tower = newTower;
-            activeDoghnut.dx = activeDoghnut.dy = 0;
+			
+			activeDoghnut.tower = -1;//-1 means that it is moving in the air.
+			
+			if(numDoughnuts(newTower) == 0  ||  smallestDoughnut(newTower).size > activeDoghnut.size){
+				activeDoghnut.below = numDoughnuts(newTower);
+				activeDoghnut.tower = newTower;
+			}
+			else{
+				activeDoghnut.below = numDoughnuts(oldTower);
+				activeDoghnut.tower = oldTower;
+			}
+			
+			activeDoghnut.dx = activeDoghnut.dy = 0;
         }
         activeDoghnut = null;
     };
@@ -42,6 +45,6 @@
             activeDoghnut.dy = dy;
         }
     };
-
-    init();
+	
+	init();
 })();
